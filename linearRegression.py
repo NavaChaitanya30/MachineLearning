@@ -21,6 +21,8 @@ import pandas as pd
 
 #loading dataset from the google drive
 # DataFrame = pd.read_csv(location)
+#try the following url for online iris dataset
+# https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data
 df1=pd.read_csv("/content/drive/MyDrive/ML-lab/datasets/Iris.csv")
 df1.head()
 
