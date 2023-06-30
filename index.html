@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ML Model Deployment</title>
+  <style>
+    /* CSS styling for the form */
+    body {
+      font-family: Arial, sans-serif;
+    }
+    h1 {
+      text-align: center;
+    }
+    form {
+      width: 300px;
+      margin: 0 auto;
+    }
+    label {
+      display: block;
+      margin-bottom: 10px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 5px;
+      margin-bottom: 10px;
+    }
+    input[type="submit"] {
+      width: 100%;
+      padding: 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Iris Model Deployment</h1>
+  <form id="inputForm">
+    <label for="sepalLength">Sepal Length:</label>
+    <input type="text" id="sepalLength" required>
+  
+    <label for="sepalWidth">Sepal Width:</label>
+    <input type="text" id="sepalWidth" required>
+  
+    <label for="petalLength">Petal Length:</label>
+    <input type="text" id="petalLength" required>
+  
+    <label for="petalWidth">Petal Width:</label>
+    <input type="text" id="petalWidth" required>
+  
+    <input type="submit" value="Submit" onclick="validateAndPredict(event)">
+  </form>
+
+  <div id="result" style="display: none;">
+    <h2>Prediction Result:</h2>
+    <p id="prediction"></p>
+  </div>
+
+  <script>
+    // Function to load the serialized model
+    function loadModel() {
+      // Load the serialized model from the 'lr.joblib' file
+      return new Promise((resolve, reject) => {
+        // Use the 'joblib' library to load the serialized model
+        // Replace 'lr.joblib' with your actual model filename
+        joblib.load('lr.joblib', (err, model) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(model);
+          }
+        });
+      });
+    }
+
+    // Function to validate the input values and make predictions
+    async function validateAndPredict(event) {
+      event.preventDefault();
+
+      // Get the input values from the form
+      const sepalLength = parseFloat(document.getElementById('sepalLength').value);
+      const sepalWidth = parseFloat(document.getElementById('sepalWidth').value);
+      const petalLength = parseFloat(document.getElementById('petalLength').value);
+      const petalWidth = parseFloat(document.getElementById('petalWidth').value);
+
+      // Validate the input values
+      if (isNaN(sepalLength) || isNaN(sepalWidth) || isNaN(petalLength) || isNaN(petalWidth)) {
+        alert('Please enter valid numeric values for all input fields.');
+        return;
+      }
+
+      // Load the ML model
+      const model = await loadModel();
+
+      // Prepare the input data for prediction
+      const inputData = [[sepalLength, sepalWidth, petalLength, petalWidth]];
+
+      // Make predictions using the model
+      const prediction = model.predict(inputData);
+
+      // Display the prediction result on the webpage
+      const resultDiv = document.getElementById('result');
+      const predictionElem = document.getElementById('prediction');
+      predictionElem.textContent = prediction;
+      resultDiv.style.display = 'block';
+    }
+  </script>
+</body>
+</html>
